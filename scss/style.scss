@@ -1,0 +1,125 @@
+// Colors
+$darkColor: hsl(0, 0%, 0%);
+$meduimColor: hsl(0, 0%, 74%);
+$lightColor: hsl(0, 0%, 100%);
+$decorationColor: hsl(233, 57%, 18%);
+
+// Fonts
+$bodyFont: "Montserrat", sans-serif;
+$titleFont: "Lilita One", sans-serif;
+
+// Common Styles
+$sectionHeight: 640px;
+$sectionPadding: 140px 140px 0;
+$gridGap: 20px;
+
+body {
+  background: $darkColor;
+  color: $lightColor;
+  font-family: $bodyFont;
+  padding: 0;
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 35px;
+  a {
+    text-decoration: none;
+    color: $lightColor;
+    padding: 15px;
+    border-radius: 10px;
+  }
+}
+
+h1 {
+  font-family: $titleFont;
+  font-weight: 400;
+  font-size: 50px;
+  color: $darkColor;
+  background-color: $lightColor;
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+}
+
+.section {
+  height: $sectionHeight;
+  background-size: cover;
+  padding: $sectionPadding;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: $gridGap;
+  align-items: start;
+  justify-items: center;
+  div {
+    background-color: $lightColor;
+    color: $darkColor;
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px hsla(0, 0%, 0%, 0.1);
+    width: 160px;
+  }
+  img {
+    width: 140px;
+    height: 140px;
+    background-color: $meduimColor; // Placeholder de color (puedes usar una imagen real)
+    border-radius: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.home {
+  background-image: url(/img/landing/background1.png);
+  height: $sectionHeight;
+  background-size: cover;
+  padding: $sectionPadding;
+}
+
+.items,
+.enemies,
+.transformations {
+  @extend .section;
+}
+
+.items {
+  background-image: url(/img/landing/background2.png);
+}
+
+.enemies {
+  background-image: url(/img/landing/background3.png);
+}
+
+.transformations {
+  background-image: url(/img/landing/background4.png);
+}
+
+.logo {
+  display: flex;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.history {
+  padding: 0 140px 140px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+
+  p {
+    text-align: center;
+  }
+  a {
+    grid-column: 2;
+    text-align: center;
+    font-family: $titleFont;
+    background-color: $lightColor;
+    font-size: x-large;
+    color: $darkColor;
+    text-decoration: none;
+    padding: 10px 40px;
+    margin: 20px 190px;
+  }
+}

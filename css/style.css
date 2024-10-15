@@ -1,0 +1,111 @@
+body {
+  background: hsl(0, 0%, 0%);
+  color: hsl(0, 0%, 100%);
+  font-family: "Montserrat", sans-serif;
+  padding: 0;
+  margin: 0;
+}
+
+nav {
+  display: flex;
+  align-items: start;
+  justify-content: center;
+  gap: 35px;
+}
+nav a {
+  text-decoration: none;
+  color: hsl(0, 0%, 100%);
+  padding: 15px;
+  border-radius: 10px;
+}
+
+h1 {
+  font-family: "Lilita One", sans-serif;
+  font-weight: 400;
+  font-size: 50px;
+  color: hsl(0, 0%, 0%);
+  background-color: hsl(0, 0%, 100%);
+  text-align: center;
+  padding: 5px;
+  margin: 0;
+}
+
+.section, .items,
+.enemies,
+.transformations {
+  height: 640px;
+  background-size: cover;
+  padding: 140px 140px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  align-items: start;
+  justify-items: center;
+}
+.section div, .items div,
+.enemies div,
+.transformations div {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 0%);
+  text-align: center;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px hsla(0, 0%, 0%, 0.1);
+  width: 160px;
+}
+.section img, .items img,
+.enemies img,
+.transformations img {
+  width: 140px;
+  height: 140px;
+  background-color: hsl(0, 0%, 74%);
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.home {
+  background-image: url(/img/landing/background1.png);
+  height: 640px;
+  background-size: cover;
+  padding: 140px 140px 0;
+}
+
+.items {
+  background-image: url(/img/landing/background2.png);
+}
+
+.enemies {
+  background-image: url(/img/landing/background3.png);
+}
+
+.transformations {
+  background-image: url(/img/landing/background4.png);
+}
+
+.logo {
+  display: flex;
+  margin: 0 auto;
+  padding-bottom: 60px;
+}
+
+.history {
+  padding: 0 140px 140px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+.history p {
+  text-align: center;
+}
+.history a {
+  grid-column: 2;
+  text-align: center;
+  font-family: "Lilita One", sans-serif;
+  background-color: hsl(0, 0%, 100%);
+  font-size: x-large;
+  color: hsl(0, 0%, 0%);
+  text-decoration: none;
+  padding: 10px 40px;
+  margin: 20px 190px;
+}
+
+/*# sourceMappingURL=style.css.map */
