@@ -16,6 +16,13 @@
   </head>
   <body>
     <div class="home">
+      <header class="header">
+        <nav>
+          <a href="#">Home</a>
+          <a href="singUp.html">Registrer</a>
+          <a href="login.html">Login</a>
+        </nav>
+      </header>
       <img class="logo" src="/img/landing/title.png" alt="logo" />
       <nav>
         <a href="#history">History</a>
@@ -40,26 +47,97 @@
         sapien ac odio blandit, eu iaculis tellus egestas. Pellentesque habitant
         morbi tristique senectus et netus et malesuada fames ac turpis egestas.
       </p>
-      <a class="btnGame" href="#">Try my game</a>
+      <a class="btnGame" href="game.html">Try my game</a>
     </div>
-    <h1 id="items">lTems</h1>
+    <h1 id="items">ltems</h1>
     <div class="items">
-      <div><img src="/img/landing/coin.gif" alt="Coin" /><h4>Coin</h4><p>ajfdiuef</p></div>
-      <div><img src="/img/landing/bottle.gif" alt="Bottle"><h4>HealtPack</h4><p>auifhaiweufh</p></div>
-      <div><img src="/img/landing/magic_stone.gif" alt="Magic stone"><h4>PowerUp</h4><p>awgdvayu</p></div>
+      <div>
+        <img src="/img/landing/coin.gif" alt="Coin" />
+        <h4>Coin</h4>
+        <p>ajfdiuef</p>
+      </div>
+      <div>
+        <img src="/img/landing/bottle.gif" alt="Bottle" />
+        <h4>HealtPack</h4>
+        <p>auifhaiweufh</p>
+      </div>
+      <div>
+        <img src="/img/landing/magic_stone.gif" alt="Magic stone" />
+        <h4>PowerUp</h4>
+        <p>awgdvayu</p>
+      </div>
     </div>
     <h1 id="enemies">Enemies</h1>
     <div class="enemies">
-        <div><img src="/img/landing/coin.gif" alt="Coin" /><h4>Coin</h4><p>ajfdiuef</p></div>
-        <div><img src="/img/landing/bottle.gif" alt="Bottle"><h4>HealtPack</h4><p>auifhaiweufh</p></div>
-        <div><img src="/img/landing/magic_stone.gif" alt="Magic stone"><h4>PowerUp</h4><p>awgdvayu</p></div>
+      <div>
+        <img src="/img/landing/coin.gif" alt="Coin" />
+        <h4>Coin</h4>
+        <p>ajfdiuef</p>
+      </div>
+      <div>
+        <img src="/img/landing/bottle.gif" alt="Bottle" />
+        <h4>HealtPack</h4>
+        <p>auifhaiweufh</p>
+      </div>
+      <div>
+        <img src="/img/landing/magic_stone.gif" alt="Magic stone" />
+        <h4>PowerUp</h4>
+        <p>awgdvayu</p>
+      </div>
     </div>
     <h1 id="transformations">Transformations</h1>
     <div class="transformations">
-        <div><img src="/img/landing/coin.gif" alt="Coin" /><h4>Coin</h4><p>ajfdiuef</p></div>
-        <div><img src="/img/landing/bottle.gif" alt="Bottle"><h4>HealtPack</h4><p>auifhaiweufh</p></div>
-        <div><img src="/img/landing/magic_stone.gif" alt="Magic stone"><h4>PowerUp</h4><p>awgdvayu</p></div>
+      <div>
+        <img src="/img/landing/coin.gif" alt="Coin" />
+        <h4>Coin</h4>
+        <p>ajfdiuef</p>
+      </div>
+      <div>
+        <img src="/img/landing/bottle.gif" alt="Bottle" />
+        <h4>HealtPack</h4>
+        <p>auifhaiweufh</p>
+      </div>
+      <div>
+        <img src="/img/landing/magic_stone.gif" alt="Magic stone" />
+        <h4>PowerUp</h4>
+        <p>awgdvayu</p>
+      </div>
     </div>
-    <footer></footer>
+    <footer>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </div>
+      <div class="footer-copyright">
+        © 2024 Nuria's Shadows. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      const navLinks = document.querySelectorAll(
+        'nav a[href^="#"], footer a[href="index.html"]'
+      );
+      navLinks.forEach((link) => {
+        link.addEventListener("click", function (event) {
+          event.preventDefault();
+          const targetId = this.getAttribute("href");
+          if (targetId === "index.html") {
+            window.scrollTo({
+              top: 0,
+              behavior: "smooth",
+            });
+          } else {
+            const targetElement = document.querySelector(targetId);
+            if (targetElement) {
+              window.scrollTo({
+                top: targetElement.offsetTop,
+                behavior: "smooth",
+              });
+            }
+          }
+        });
+      });
+    </script>
   </body>
 </html>
