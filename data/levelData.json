@@ -12,7 +12,7 @@
     "platforms": [
        {
           "x": 72,
-          "y": 450,
+          "y": 30,
           "tiles": 6,
           "key": "block"
        },
