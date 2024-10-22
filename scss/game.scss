@@ -1,24 +1,94 @@
-*{
-    margin: 10%;
-    padding: 10%;
-    box-sizing: border-box;
-  }
+@use 'variables';
+@use 'typography';
 
-  html, body {
-    height: 100%;
-  }
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
+html,
+body {
+  height: 100%;
+}
 
-  #canvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    z-index: 1;
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#canvas {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  z-index: 1;
+}
+
+#hud {
+  position: absolute;
+  top: 20px; /* Ajuste para la parte superior */
+  left: 20px;
+  z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+  padding: 10px;
+  background-color: variables.$meduimColor;
+  border-radius: 30px;
+}
+
+#livesText, #coinsText {
+  font-size: 32px;
+  font-family: variables.$titleFont;
+  margin: 0;
+}
+
+#message {
+  position: fixed; /* Fijo para que siempre esté en la misma posición */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Ajustar la posición */
+  background-color: variables.$darkColorOpacity; /* Color de fondo */
+  color: variables.$lightColor; /* Color del texto */
+  font-size: 2rem; /* Tamaño de fuente */
+  font-family: variables.$titleFont; /* Fuente del mensaje */
+  padding: 1000px; /* Espaciado interno */
+  z-index: 20; /* Asegúrate de que esté por encima de otros elementos */
+  opacity: 0; /* Inicialmente invisible */
+  p{
+    height: 100px;
+    width: 400px;
+    text-align: center;
   }
+}
+
+#message.visible {
+  opacity: 1; /* Hacer visible el mensaje */
+}
+
+#victoryMessage {
+  position: fixed; /* Fijo para que siempre esté en la misma posición */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Ajustar la posición */
+  background-color: variables.$darkColorOpacity; /* Color de fondo */
+  color: variables.$lightColor; /* Color del texto */
+  font-size: 2rem; /* Tamaño de fuente */
+  font-family: variables.$titleFont; /* Fuente del mensaje */
+  padding: 1000px; /* Espaciado interno */
+  z-index: 20; /* Asegúrate de que esté por encima de otros elementos */
+  opacity: 0; /* Inicialmente invisible */
+  p{
+    height: 100px;
+    width: 400px;
+    text-align: center;
+  }
+}
+
+#victoryMessage.visible {
+  opacity: 1; /* Hacer visible el mensaje */
+}
+
+.hidden {
+  display: none; /* Ocultar el mensaje */
+}

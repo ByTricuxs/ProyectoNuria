@@ -1,302 +1,160 @@
+const PLAYER_SCALE = 0.6;
+const PLATFORM_SCALE = 0.7;
+const ENEMY_SCALE = 0.3;
+const GIFT_SCALE = 0.1;
+const ZOOM_FACTOR = 1.3;
+const WORLD_BOUNDS = { width: 5714, height: 1000 };
+const PLAYER_DIMENSIONS = {
+  walk: [240, 435],
+  idle: [140, 435],
+  jump: [140, 435],
+};
+
 // Crear una nueva escena de Phaser llamada "Game"
 let gameScene = new Phaser.Scene("Game");
 
 // Inicialización de parámetros para la escena
 gameScene.init = function () {
-  this.playerSpeed = 300; // Velocidad del jugador
-  this.playerJump = -840; // Fuerza de salto del jugador
-  this.canJump = false; // Estado para verificar si el jugador puede saltar
+  this.playerSpeed = 300;
+  this.playerJump = -880;
+  this.canJump = false;
   this.isTransforming = false;
-  lives = 3;
-  coinsCount = 0;
+  this.lives = 3;
+  this.coinsCount = 0;
+  updateLivesText(this);
+  updateCoinsText(this);
 };
 
 // Carga de los recursos necesarios para el juego
 gameScene.preload = function () {
-  // Cargar imágenes de fondo y plataformas
-  this.load.image("layer4", "./img/sources/Background/Layer 4.png"); // Capa de fondo
-  this.load.image("layer3", "./img/sources/Background/Layer 3.png"); // Capa de parallax
-  this.load.image("layer2", "./img/sources/Background/Layer 2.png"); // Capa del suelo
-  this.load.image("layer1", "./img/sources/Background/Layer 1.png"); // Capa de adornos
-  this.load.image("layer0", "./img/sources/Background/Layer 0.png"); // Capa de efecto de oscuridad
+  // Cargar imágenes y sprites
+  const images = [
+    ["layer4", "./img/sources/Background/Layer 4.png"],
+    ["layer3", "./img/sources/Background/Layer 3.png"],
+    ["layer2", "./img/sources/Background/Layer 2.png"],
+    ["layer1", "./img/sources/Background/Layer 1.png"],
+    ["layer0", "./img/sources/Background/Layer 0.png"],
+    ["plataformLeft", "./img/sources/Plataforms/Left.png"],
+    ["plataformRight", "./img/sources/Plataforms/Right.png"],
+    ["plataformMidle", "./img/sources/Plataforms/Midle.png"],
+  ];
 
-  // Cargar imágenes de plataformas
-  this.load.image("plataformLeft", "./img/sources/Plataforms/Left.png"); // Plataforma izquierda
-  this.load.image("plataformRight", "./img/sources/Plataforms/Right.png"); // Plataforma derecha
-  this.load.image("plataformMidle", "./img/sources/Plataforms/Midle.png"); // Plataforma central
+  const spritesheets = [
+    ["playerIdle", "/img/sources/Character/idle.png", 109, 275],
+    ["playerWalk", "/img/sources/Character/walk.png", 149, 275],
+    ["playerJump", "/img/sources/Character/jump.png", 176, 275],
+    [
+      "transformation",
+      "/img/sources/PowerUps/Transformation/Transformation.png",
+      220,
+      275,
+    ],
+    ["coin", "./img/sources/PowerUps/Gift/Coin.png", 700, 700],
+    ["bottle", "./img/sources/PowerUps/HealthPack/Bottle.png", 700, 700],
+    ["magicStone", "./img/sources/PowerUps/PowerUp/Magic_Stone.png", 700, 700],
+    ["enemy1", "/img/sources/Enemy1/Enemy_1.png", 600, 900],
+    ["enemy2", "/img/sources/Enemy2/Enemy_2.png", 700, 700],
+    ["enemy3", "/img/sources/Enemy3/Enemy_3.png", 500, 500],
+  ];
 
-  // Cargar sprites del jugador
-  this.load.spritesheet("playerIdle", "/img/sources/Character/idle.png", {
-    frameWidth: 109,
-    frameHeight: 275,
-  });
-  this.load.spritesheet("playerWalk", "/img/sources/Character/walk.png", {
-    frameWidth: 149,
-    frameHeight: 275,
-  });
-  this.load.spritesheet("playerJump", "/img/sources/Character/jump.png", {
-    frameWidth: 176,
-    frameHeight: 275,
-  });
-  this.load.spritesheet(
-    "transformation",
-    "/img/sources/PowerUps/Transformation/Transformation.png",
-    {
-      frameWidth: 220,
-      frameHeight: 275,
-    }
-  );
-
-  //Cargar gifts de los props
-  this.load.spritesheet("coin", "./img/sources/PowerUps/Gift/Coin.png", {
-    frameWidth: 700,
-    frameHeight: 700,
-  });
-  this.load.spritesheet(
-    "bottle",
-    "./img/sources/PowerUps/HealthPack/Bottle.png",
-    {
-      frameWidth: 700,
-      frameHeight: 700,
-    }
-  );
-  this.load.spritesheet(
-    "magicStone",
-    "./img/sources/PowerUps/PowerUp/Magic_Stone.png",
-    {
-      frameWidth: 700,
-      frameHeight: 700,
-    }
-  );
-
-  // Cargar la hoja de sprites de los enemigos
-  this.load.spritesheet("enemy1", "/img/sources/Enemy1/Enemy_1.png", {
-    frameWidth: 600,
-    frameHeight: 900,
-  });
-  this.load.spritesheet("enemy2", "/img/sources/Enemy2/Enemy_2.png", {
-    frameWidth: 700,
-    frameHeight: 700,
-  });
-  this.load.spritesheet("enemy3", "/img/sources/Enemy3/Enemy_3.png", {
-    frameWidth: 500,
-    frameHeight: 500,
+  images.forEach(([key, path]) => this.load.image(key, path));
+  spritesheets.forEach(([key, path, frameWidth, frameHeight]) => {
+    this.load.spritesheet(key, path, { frameWidth, frameHeight });
   });
 
-  // Cargar datos del nivel desde un archivo JSON
   this.load.json("levelData", "/data/levelData.json");
 };
 
-// Configuración del nivel basado en los datos cargados
-gameScene.setupLevel = function (levelData) {
-  // Por ahora, esta función está vacía, pero puede ser utilizada para configurar
-  // elementos del nivel basados en el archivo JSON cargado.
+// Función para crear animaciones reutilizable
+gameScene.createAnimation = function (
+  key,
+  spriteKey,
+  frames,
+  frameRate,
+  repeat = -1
+) {
+  this.anims.create({
+    key,
+    frames: this.anims.generateFrameNumbers(spriteKey, { frames }),
+    frameRate,
+    repeat,
+  });
 };
 
 // Creación de la escena y configuración de los elementos del juego
 gameScene.create = function () {
-  // Añadir fondo (capas de fondo con efecto de parallax)
-  this.layer4 = this.add
-    .image(0, 0, "layer4")
-    .setOrigin(0, 0)
-    .setScrollFactor(0);
-  this.layer3 = this.add
-    .image(0, 0, "layer3")
-    .setOrigin(0, 0)
-    .setScrollFactor(0);
+  const createLayer = (key, scrollFactor = 0) =>
+    this.add.image(0, 0, key).setOrigin(0, 0).setScrollFactor(scrollFactor);
 
-  // Crear el grupo de plataformas estáticas
+  // Capas de fondo
+  this.layer4 = createLayer("layer4");
+  this.layer3 = createLayer("layer3");
+
+  // Crear plataformas
   this.platforms = this.physics.add.staticGroup();
-  // Añadir plataformas
-  this.platforms.create(400, 700, "plataformMidle").setScale(0.7).refreshBody();
-  this.platforms.create(800, 450, "plataformLeft").setScale(0.7).refreshBody();
-  this.platforms
-    .create(1200, 400, "plataformRight")
-    .setScale(0.7)
-    .refreshBody();
-  this.platforms
-    .create(1600, 150, "plataformMidle")
-    .setScale(0.7)
-    .refreshBody();
 
-  // Añadir el layer2 como plataforma colisionable
+  // Cargar datos desde el JSON
+  const levelData = this.cache.json.get("levelData");
+
+  // Crear plataformas a partir de los datos del JSON
+  levelData.platforms.forEach((platform) => {
+    const platformKey = platform.type; // Usar el tipo desde el JSON
+    this.platforms
+      .create(platform.x, platform.y, platformKey)
+      .setScale(PLATFORM_SCALE)
+      .refreshBody();
+  });
+
+  // Agregar suelos y otras plataformas (puedes incluir estas directamente o también desde JSON)
   this.layer2 = this.physics.add
     .staticImage(0, 900, "layer2")
     .setOrigin(0, 0)
     .setScale(1)
     .refreshBody();
 
-  // Configuración de animaciones del personaje
-  //////////////////////////////////////////////////////
-  const walk = {
-    key: "walk",
-    frames: this.anims.generateFrameNumbers("playerWalk", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(walk);
+  // Crear animaciones
+  this.createAnimations();
 
-  const idle = {
-    key: "idle",
-    frames: this.anims.generateFrameNumbers("playerIdle", {
-      frames: [0, 1, 2, 3],
-    }),
-    frameRate: 4,
-    repeat: -1,
-  };
-  this.anims.create(idle);
-
-  const jump = {
-    key: "jump",
-    frames: this.anims.generateFrameNumbers("playerJump", {
-      frames: [0, 1, 2, 3, 4, 5, 6],
-    }),
-    frameRate: 6.5,
-    repeat: 0,
-  };
-  this.anims.create(jump);
-
-  const transform = {
-    key: "transformation",
-    frames: this.anims.generateFrameNumbers("transformation", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 5,
-    repeat: 0,
-  };
-  this.anims.create(transform);
-  ///////////////////////////////////////////////////
-
-  // Configuración de animaciones de los props
-  const coinAnimation = {
-    key: "coin",
-    frames: this.anims.generateFrameNumbers("coin", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(coinAnimation);
-
-  const bottleAnimation = {
-    key: "bottle",
-    frames: this.anims.generateFrameNumbers("bottle", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(bottleAnimation);
-
-  const magicStoneAnimation = {
-    key: "magicStone",
-    frames: this.anims.generateFrameNumbers("magicStone", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(magicStoneAnimation);
-
-  //Animacion de los enemigos
-  const enemy1Animation = {
-    key: "enemy1",
-    frames: this.anims.generateFrameNumbers("enemy1", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(enemy1Animation);
-
-  const enemy2Animation = {
-    key: "enemy2",
-    frames: this.anims.generateFrameNumbers("enemy2", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(enemy2Animation);
-
-  const enemy3Animation = {
-    key: "enemy3",
-    frames: this.anims.generateFrameNumbers("enemy3", {
-      frames: [0, 1, 2, 3, 4, 5, 6, 7],
-    }),
-    frameRate: 8,
-    repeat: -1,
-  };
-  this.anims.create(enemy3Animation);
-
+  // Enemigos
   this.enemies = this.physics.add.staticGroup();
-  const enemy1 = this.enemies
-    .create(2000, 700, "enemy1")
-    .setScale(0.3)
-    .refreshBody();
-  enemy1.anims.play("enemy1"); // Reproducir la animación "enemy1"
+  levelData.enemies.forEach((enemy) => {
+    const newEnemy = this.enemies
+      .create(enemy.x, enemy.y, enemy.key)
+      .setScale(ENEMY_SCALE)
+      .refreshBody();
+    newEnemy.anims.play(enemy.key);
+  });
 
-  const enemy2 = this.enemies
-    .create(2300, 700, "enemy2")
-    .setScale(0.3)
-    .refreshBody();
-  enemy2.anims.play("enemy2"); // Reproducir la animación "enemy2"
-
-  const enemy3 = this.enemies
-    .create(2600, 700, "enemy3")
-    .setScale(0.3)
-    .refreshBody();
-  enemy3.anims.play("enemy3"); // Reproducir la animación "enemy3"
-
+  // Regalos (gifts)
   this.gifts = this.physics.add.staticGroup();
+  levelData.gifts.forEach((gift) => {
+    const newGift = this.gifts
+      .create(gift.x, gift.y, gift.key)
+      .setScale(GIFT_SCALE)
+      .refreshBody();
+    newGift.anims.play(gift.key);
+  });
 
-  const coin = this.gifts.create(800, 700, "coin").setScale(0.1).refreshBody();
-  coin.anims.play("coin");
+  // Configuración del jugador
+  const playerData = levelData.player;
+  this.player = this.physics.add
+    .sprite(playerData.x, playerData.y, playerData.key)
+    .setScale(PLAYER_SCALE)
+    .setCollideWorldBounds(true);
 
-  const bottle = this.gifts
-    .create(1000, 700, "bottle")
-    .setScale(0.1)
-    .refreshBody();
-  bottle.anims.play("bottle");
+  // Configurar mundo y cámara
+  this.physics.world.setBounds(0, 0, WORLD_BOUNDS.width, WORLD_BOUNDS.height);
+  this.cameras.main
+    .setBounds(0, 0, WORLD_BOUNDS.width, WORLD_BOUNDS.height)
+    .startFollow(this.player)
+    .setZoom(ZOOM_FACTOR);
 
-  const magicStone = this.gifts
-    .create(1200, 800, "magicStone")
-    .setScale(0.1)
-    .refreshBody();
-  magicStone.anims.play("magicStone");
-
-  // Crear el jugador y configurarlo para colisiones
-  this.player = this.physics.add.sprite(100, 100, "playerIdle");
-  this.player.setScale(0.6);
-  this.player.setCollideWorldBounds(true); // Evitar que el jugador salga de los límites del mundo
-
-  // Configurar los límites de la cámara y el mundo
-  this.physics.world.setBounds(0, 0, 5714, 1000); // Ajustar a las dimensiones del fondo
-  this.cameras.main.setBounds(0, 0, 5714, 1000); // Tamaño de la cámara
-  this.cameras.main.startFollow(this.player); // Seguir al jugador con la cámara
-
-  // Configurar el factor de zoom de la cámara
-  let zoomFactor = 1.3;
-  this.cameras.main.setZoom(zoomFactor);
-
-  // Habilitar las teclas de dirección para controlar el jugador
+  // Controles del jugador
   this.cursors = this.input.keyboard.createCursorKeys();
 
-  // Añadir capas de adornos delante del jugador
-  this.layer1 = this.add
-    .image(0, 0, "layer1")
-    .setOrigin(0, 0)
-    .setScrollFactor(1);
-  this.layer0 = this.add
-    .image(0, 0, "layer0")
-    .setOrigin(0, 0)
-    .setScrollFactor(1);
-
-  // Habilitar la colisión del jugador con las plataformas
+  // Configurar colisiones
   this.physics.add.collider(this.player, this.platforms);
-  // Configurar la detección de colisiones con los regalos en la función create
+  this.physics.add.collider(this.player, this.layer2);
   this.physics.add.overlap(
     this.player,
     this.gifts,
@@ -304,14 +162,43 @@ gameScene.create = function () {
     null,
     this
   );
-  this.physics.add.overlap(this.player, this.enemies, hitEnemies, null, this);
-  this.physics.add.collider(this.player, this.layer2);
+  this.physics.add.overlap(
+    this.player,
+    this.enemies,
+    this.hitEnemies,
+    null,
+    this
+  );
 
-  updateLivesText(this);
-  updateCoinsText(this);
+  // Añadir capas de adornos
+  createLayer("layer1", 1);
+  createLayer("layer0", 1);
 };
 
-// Función para recoger los regalos
+gameScene.createAnimations = function () {
+  this.createAnimation("walk", "playerWalk", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+  this.createAnimation("idle", "playerIdle", [0, 1, 2, 3], 4);
+  this.createAnimation("jump", "playerJump", [0, 1, 2, 3, 4, 5, 6], 6.5, 0);
+  this.createAnimation(
+    "transformation",
+    "transformation",
+    [0, 1, 2, 3, 4, 5, 6, 7],
+    5,
+    0
+  );
+
+  // Animaciones de props
+  this.createAnimation("coin", "coin", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+  this.createAnimation("bottle", "bottle", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+  this.createAnimation("magicStone", "magicStone", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+
+  // Animaciones de enemigos
+  this.createAnimation("enemy1", "enemy1", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+  this.createAnimation("enemy2", "enemy2", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+  this.createAnimation("enemy3", "enemy3", [0, 1, 2, 3, 4, 5, 6, 7], 8);
+};
+
+// Función para recoger regalos (gifts)
 gameScene.collectGifts = function (player, gift) {
   // Aquí verificamos el tipo de objeto recogido para activar la acción correspondiente
   switch (gift.texture.key) {
@@ -326,129 +213,153 @@ gameScene.collectGifts = function (player, gift) {
       break;
   }
 
-  // Destruir el objeto recogido
   gift.destroy();
 };
 
+// Función para manejar la recolección de la moneda (sumar una moneda)
 gameScene.collectCoin = function (player, coin) {
   console.log("¡Obtuviste una moneda!");
-  coinsCount += 1;
+  this.coinsCount += 1;
   updateCoinsText(this);
+  // Verifica si se han recogido 3 monedas
+  if (this.coinsCount === 3) {
+    showVictoryMessage();
+    player.setVelocity(0, 0);
+  }
 };
 
 // Función para manejar la recolección de la botella (sumar una vida)
 gameScene.collectBottle = function (player, bottle) {
   console.log("¡Has recuperado una vida!");
-  lives += 1;
+  this.lives += 1;
   updateLivesText(this);
 };
 
 // Función para manejar la recolección de la piedra mágica (animación de transformación)
 gameScene.collectMagicStone = function (player, magicStone) {
-  if (this.isTransforming) return; // Evitar múltiples transformaciones simultáneas
-  this.isTransforming = true; // Establecer que se está transformando
-
-  // Desactivar el movimiento del jugador completamente
-  player.setVelocity(0, 0); // Detener el movimiento
-  player.body.moves = false; // Desactivar el movimiento del cuerpo del jugador
-  player.body.allowGravity = false; // Desactivar la gravedad temporalmente
-
-  // Deshabilitar el input mientras dura la transformación
+  if (this.isTransforming) return;
+  this.isTransforming = true;
+  player.setVelocity(0, 0);
+  player.body.moves = false;
+  player.body.allowGravity = false;
   this.input.keyboard.enabled = false;
-
-  // Detener cualquier animación anterior
   player.anims.stop();
-
-  // Iniciar la animación de transformación
   player.anims.play("transformation");
-
-  // Una vez que la animación de transformación termine
   player.on("animationcomplete-transformation", () => {
-    this.isTransforming = false; // La transformación ha terminado
-
-    // Restaurar el cuerpo del jugador y permitir gravedad de nuevo
-    
+    this.isTransforming = false;
+    player.setVelocity(0, 0);
     player.body.moves = true;
     player.body.allowGravity = true;
-
-    // Restaurar el input del teclado para permitir movimiento
     this.input.keyboard.enabled = true;
-
-    // Restaurar la animación adecuada según el estado del jugador
     if (player.body.touching.down) {
       player.setVelocity(0, 0);
-      player.anims.play("idle"); // Si está en el suelo, animación idle
+      player.anims.play("idle");
     } else {
       player.setVelocity(0, 0);
-      player.anims.play("jump"); // Si está en el aire, animación de salto
+      player.anims.play("jump");
     }
   });
-
-  // Destruir la piedra mágica
   magicStone.destroy();
 };
 
-function hitEnemies(player, enemy) {
+// Función para manejar colisión con enemigos
+gameScene.hitEnemies = function (player, enemy) {
   console.log("Colisión con enemigo detectada");
-  lives -= 1;
-  updateLivesText(this);
 
-  if (lives >= 0) {
-    console.log(`¡Te queda(n) ${lives} vida(s)!`);
-    player.setPosition(100, 100);
-  }
-}
-
-function updateTextPositions(scene) {
-  if (scene.livesText) {
-      scene.livesText.setPosition(16, 16);
-  }
-  if (scene.coinsText) {
-      scene.coinsText.setPosition(16, 48);
-  }
-}
-
-// Función para actualizar el texto de vidas en pantalla
-function updateLivesText(scene) {
-  if (!scene.livesText) {
-      scene.livesText = scene.add.text(16, 16, `Vidas: ${lives}`, {
-          fontSize: "32px",
-          fill: "#FFF",
-      });
+  if (this.lives === 1) {
+    console.log("¡Has perdido tu última vida! Reiniciando el nivel...");
+    this.scene.stop(); // Detener la escena actual
+    player.setVelocity(0, 0);
+    player.body.moves = false;
+    player.body.allowGravity = false;
+    this.input.keyboard.enabled = false;
+    this.scene.start("Game"); // Iniciar la escena nuevamente
+    updateCoinsText(this);
+    updateLivesText(this);
+    showMessage();
   } else {
-      scene.livesText.setText(`Vidas: ${lives}`);
-  }
-}
-
-// Función para actualizar el texto de monedas en pantalla
-function updateCoinsText(scene) {
-  if (!scene.coinsText) {
-      scene.coinsText = scene.add.text(16, 48, `Monedas: ${coinsCount}`, {
-          fontSize: "32px",
-          fill: "#FFF",
-      });
-  } else {
-      scene.coinsText.setText(`Monedas: ${coinsCount}`);
-  }
-}
-
-// Actualización de la escena (se ejecuta en cada cuadro)
-gameScene.updatePlayerHitbox = function () {
-  if (this.isTransforming) return; // Evitar cambios de hitbox mientras se transforma
-
-  const animKey = this.player.anims.currentAnim
-    ? this.player.anims.currentAnim.key
-    : null;
-  if (animKey === "walk") {
-    this.player.body.setSize(149, 275); // Tamaño de la imagen de caminar
-  } else if (animKey === "idle") {
-    this.player.body.setSize(109, 275); // Tamaño de la imagen en reposo
-  } else if (animKey === "jump") {
-    this.player.body.setSize(109, 275); // Tamaño de la imagen de salto
+    // Restar vida
+    this.lives -= 1;
+    updateLivesText(this);
+    console.log(`¡Te queda(n) ${this.lives} vida(s)!`);
+    player.setPosition(100, 817); // Opcional: reiniciar posición del jugador
   }
 };
 
-// Actualización de la escena (se ejecuta en cada cuadro)
+function showMessage() {
+  const messageDiv = document.getElementById("message");
+  messageDiv.classList.remove("hidden");
+  messageDiv.classList.add("visible");
+
+  setTimeout(() => {
+    messageDiv.classList.remove("visible");
+    messageDiv.classList.add("hidden");
+  }, 6000);
+}
+
+function showVictoryMessage(player) {
+  const victoryMessage = document.getElementById("victoryMessage");
+  victoryMessage.classList.remove("hidden");
+  victoryMessage.classList.add("visible");
+
+  setTimeout(() => {
+    victoryMessage.classList.remove("visible");
+    victoryMessage.classList.add("hidden");
+  }, 6000);
+}
+
+function updateLivesText(scene) {
+  // Acceder al elemento HTML y actualizar el texto
+  const livesTextElement = document.getElementById("livesText");
+  if (livesTextElement) {
+    livesTextElement.textContent = `Vidas: ${scene.lives}`;
+  }
+}
+
+function updateCoinsText(scene) {
+  // Acceder al elemento HTML y actualizar el texto
+  const coinsTextElement = document.getElementById("coinsText");
+  if (coinsTextElement) {
+    coinsTextElement.textContent = `Monedas: ${scene.coinsCount}`;
+  }
+}
+
+gameScene.updatePlayerHitbox = function () {
+  // Dependiendo de la animación actual, ajustar el tamaño del hitbox del jugador
+  const currentAnimKey = this.player.anims.currentAnim
+    ? this.player.anims.currentAnim.key
+    : "idle";
+
+  let width, height;
+
+  switch (currentAnimKey) {
+    case "walk":
+      width = PLAYER_DIMENSIONS.walk[0];
+      height = PLAYER_DIMENSIONS.walk[1];
+      break;
+    case "idle":
+      width = PLAYER_DIMENSIONS.idle[0];
+      height = PLAYER_DIMENSIONS.idle[1];
+      break;
+    case "jump":
+      width = PLAYER_DIMENSIONS.jump[0];
+      height = PLAYER_DIMENSIONS.jump[1];
+      break;
+    default:
+      width = PLAYER_DIMENSIONS.idle[0];
+      height = PLAYER_DIMENSIONS.idle[1];
+  }
+
+  // Redimensionar el hitbox del jugador
+  this.player.body.setSize(width * PLAYER_SCALE, height * PLAYER_SCALE);
+  // Centrar el hitbox en el sprite del jugador
+  this.player.body.setOffset(
+    (this.player.width - width * PLAYER_SCALE) / 2,
+    (this.player.height - height * PLAYER_SCALE) / 2
+  );
+};
+
+// Actualización del juego
 gameScene.update = function () {
   // Evitar actualizar si está en transformación
   if (this.isTransforming) return;
@@ -512,9 +423,6 @@ gameScene.update = function () {
       }
     }
   }
-
-  updateTextPositions(this);
-  // Efecto de parallax para las capas de fondo
   this.layer4.x = -this.cameras.main.scrollX * 0.1; // Capa más lejana, se mueve más lento
   this.layer4.y = -this.cameras.main.scrollY * 0.1; // Capa más lejana, se mueve más lento
 
@@ -522,31 +430,26 @@ gameScene.update = function () {
   this.layer3.y = -this.cameras.main.scrollY * 0.3; // Capa intermedia
 };
 
-// Configuración del juego
 let config = {
-  type: Phaser.AUTO, // Selección automática de renderizado (WebGL o Canvas)
-  width: window.innerWidth, // Ancho del juego basado en el ancho de la ventana
-  height: window.innerHeight, // Alto del juego basado en el alto de la ventana
-  debug: true, // Mostrar información de depuración
-  scene: gameScene, // Escena a usar
+  type: Phaser.AUTO,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  debug: true,
+  scene: gameScene,
   physics: {
-    default: "arcade", // Motor de físicas
+    default: "arcade",
     arcade: {
-      gravity: { y: 1400 }, // Gravedad vertical
-      debug: true, // Mostrar colisionadores en la pantalla
+      gravity: { y: 1400 },
+      debug: false,
     },
   },
   scale: {
-    mode: Phaser.Scale.RESIZE, // Permitir el cambio de tamaño
-    autoCenter: Phaser.Scale.CENTER_BOTH, // Centrar el juego en la pantalla
+    mode: Phaser.Scale.RESIZE,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
   },
 };
 
-// Crear el juego
 let game = new Phaser.Game(config);
-
-// Ajustar el tamaño del juego cuando cambia el tamaño de la ventana
 window.addEventListener("resize", () => {
   game.scale.resize(window.innerWidth, window.innerHeight);
-  updateTextPositions(game.scene.keys.Game);
 });

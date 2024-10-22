@@ -1,0 +1,20 @@
+@media (min-width: 30rem) {
+  nav {
+    display: flex;
+  }
+  nav a {
+    padding: 0.3125rem;
+    margin: 0.625rem;
+  }
+}
+@media (min-width: 48rem) {
+  nav {
+    display: flex;
+  }
+  nav a {
+    padding: 0.9375rem;
+    margin: 0.625rem;
+  }
+}
+
+/*# sourceMappingURL=header.css.map */

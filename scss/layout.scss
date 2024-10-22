@@ -1,0 +1,45 @@
+@use 'mixins';
+@use 'section';
+
+.home,
+.login-page,
+.signup-page {
+    background-image: url(/img/landing/background1.png);
+    height: 100vh;
+    @include mixins.flex-center;
+    flex-direction: column;
+    background-size: cover;
+}
+
+.items,
+.enemies,
+.transformations {
+    @extend .section;
+}
+
+.items {
+    background-image: url(/img/landing/background2.png);
+}
+
+.enemies {
+    background-image: url(/img/landing/background3.png);
+}
+
+.transformations {
+    background-image: url(/img/landing/background4.png);
+}
+
+.logo {
+    display: flex;
+    margin: 0 auto;
+    padding: 1.25rem 0; // 20px to rem
+    height: 7.8125rem; // 125px
+
+    @include mixins.telefono {
+        height: 12.5rem; // 200px
+    }
+
+    @include mixins.tablet {
+        height: 18.75rem; // 300px
+    }
+}

@@ -1,10 +1,22 @@
-* {
+@charset "UTF-8";
+h1 {
+  font-family: "Lilita One", sans-serif;
+  font-weight: 400;
+  font-size: 3.125rem;
+  color: hsl(0, 0%, 100%);
+  text-align: center;
+  padding: 0.3125rem;
   margin: 0;
-  padding: 0;
-  box-sizing: border-box;
 }
 
-html, body {
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
   height: 100%;
 }
 
@@ -21,6 +33,72 @@ body {
   transform: translate(-50%, -50%);
   display: flex;
   z-index: 1;
+}
+
+#hud {
+  position: absolute;
+  top: 20px; /* Ajuste para la parte superior */
+  left: 20px;
+  z-index: 10; /* Asegúrate de que esté por encima de otros elementos */
+  padding: 10px;
+  background-color: hsl(0, 0%, 74%);
+  border-radius: 30px;
+}
+
+#livesText, #coinsText {
+  font-size: 32px;
+  font-family: "Lilita One", sans-serif;
+  margin: 0;
+}
+
+#message {
+  position: fixed; /* Fijo para que siempre esté en la misma posición */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Ajustar la posición */
+  background-color: hsla(0, 0%, 0%, 0.404); /* Color de fondo */
+  color: hsl(0, 0%, 100%); /* Color del texto */
+  font-size: 2rem; /* Tamaño de fuente */
+  font-family: "Lilita One", sans-serif; /* Fuente del mensaje */
+  padding: 1000px; /* Espaciado interno */
+  z-index: 20; /* Asegúrate de que esté por encima de otros elementos */
+  opacity: 0; /* Inicialmente invisible */
+}
+#message p {
+  height: 100px;
+  width: 400px;
+  text-align: center;
+}
+
+#message.visible {
+  opacity: 1; /* Hacer visible el mensaje */
+}
+
+#victoryMessage {
+  position: fixed; /* Fijo para que siempre esté en la misma posición */
+  top: 50%; /* Centrado vertical */
+  left: 50%; /* Centrado horizontal */
+  transform: translate(-50%, -50%); /* Ajustar la posición */
+  background-color: hsla(0, 0%, 0%, 0.404); /* Color de fondo */
+  color: hsl(0, 0%, 100%); /* Color del texto */
+  font-size: 2rem; /* Tamaño de fuente */
+  font-family: "Lilita One", sans-serif; /* Fuente del mensaje */
+  padding: 1000px; /* Espaciado interno */
+  z-index: 20; /* Asegúrate de que esté por encima de otros elementos */
+  opacity: 0; /* Inicialmente invisible */
+}
+#victoryMessage p {
+  height: 100px;
+  width: 400px;
+  text-align: center;
+}
+
+#victoryMessage.visible {
+  opacity: 1; /* Hacer visible el mensaje */
+}
+
+.hidden {
+  display: none; /* Ocultar el mensaje */
 }
 
 /*# sourceMappingURL=game.css.map */

@@ -1,0 +1,23 @@
+@use 'mixins';
+
+@include mixins.telefono {
+    nav {
+        display: flex;
+
+        a {
+            padding: 0.3125rem; // 5px
+            margin: 0.625rem; // 10px
+        }
+    }
+}
+
+@include mixins.tablet {
+    nav {
+        display: flex;
+
+        a {
+            padding: 0.9375rem; // 15px
+            margin: 0.625rem; // 10px
+        }
+    }
+}

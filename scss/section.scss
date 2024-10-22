@@ -1,0 +1,31 @@
+@use 'variables';
+@use 'mixins';
+
+.section {
+    height: variables.$sectionHeight;
+    background-size: cover;
+    padding: variables.$sectionPadding;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); // 160px to rem
+    gap: variables.$gridGap;
+    align-items: start;
+    justify-items: center;
+
+    div {
+        background-color: variables.$lightColor;
+        color: variables.$darkColor;
+        text-align: center;
+        padding: 1.25rem; // 20px
+        border-radius: 0.625rem; // 10px
+        @include mixins.box-shadow(hsla(0, 0%, 0%, 0.1));
+        width: 10rem; // 160px to rem
+    }
+
+    img {
+        width: 8.75rem; // 140px to rem
+        height: 8.75rem; // 140px to rem
+        background-color: variables.$meduimColor;
+        border-radius: 0.625rem; // 10px
+        margin-bottom: 0.625rem; // 10px
+    }
+}

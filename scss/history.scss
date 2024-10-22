@@ -1,0 +1,51 @@
+@use 'variables';
+@use 'mixins';
+
+.history {
+    padding: 13.75rem 8.75rem 11.25rem; // 220px to rem
+    display: grid;
+    grid-template-rows: repeat(3, 1fr);
+    place-content: center;
+
+    p {
+        text-align: center;
+        padding: 0 1.5625rem; // 25px
+        margin: 3.4375rem; // 55px
+    }
+
+    a {
+        grid-column: 1 / 2;
+        text-align: center;
+        font-family: variables.$titleFont;
+        background-color: variables.$lightColor;
+        font-size: 1.25rem; // x-large
+        color: variables.$darkColor;
+        text-decoration: none;
+        padding: 0.625rem; // 10px
+        margin: 0 auto;
+        width: 6.25rem; // 100px
+        height: 3.75rem; // 60px
+    }
+
+    img {
+        max-width: 37.5rem; // 600px
+        margin: 0 auto;
+        grid-column: 1 / 2;
+    }
+
+    @include mixins.telefono {
+        display: grid;
+        place-content: center;
+        justify-content: center;
+        align-items: center;
+
+        a {
+            grid-column: 2;
+        }
+
+        p {
+            margin: 0;
+            padding: 0;
+        }
+    }
+}
