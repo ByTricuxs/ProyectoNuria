@@ -1,0 +1,76 @@
+.section, .items,
+.enemies,
+.transformations {
+  height: auto;
+  background-size: cover;
+  padding: 6.75rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+  justify-items: center;
+}
+.section div, .items div,
+.enemies div,
+.transformations div {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 0%);
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0.25rem 0.75rem hsla(0, 0%, 0%, 0.1);
+  width: 12rem;
+  height: auto;
+}
+.section img, .items img,
+.enemies img,
+.transformations img {
+  width: 10.75rem;
+  height: 10.75rem;
+  background-color: hsl(0, 0%, 74%);
+  border-radius: 0.625rem;
+  margin-bottom: 0.625rem;
+}
+
+.home,
+.login-page,
+.signup-page {
+  background-image: url(/img/landing/background1.png);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  background-size: cover;
+}
+
+.items {
+  background-image: url(/img/landing/background2.png);
+}
+
+.enemies {
+  background-image: url(/img/landing/background3.png);
+}
+
+.transformations {
+  background-image: url(/img/landing/background4.png);
+}
+
+.logo {
+  display: flex;
+  margin: 0 auto;
+  padding: 1.25rem 0;
+  height: 7.8125rem;
+}
+@media (min-width: 30rem) {
+  .logo {
+    height: 12.5rem;
+  }
+}
+@media (min-width: 48rem) {
+  .logo {
+    height: 18.75rem;
+  }
+}
+
+/*# sourceMappingURL=layout.css.map */

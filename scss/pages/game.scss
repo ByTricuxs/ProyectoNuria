@@ -1,5 +1,5 @@
-@use 'variables';
-@use 'typography';
+@use '../abstracts/variables';
+@use '../abstracts/typography';
 
 * {
   box-sizing: border-box;

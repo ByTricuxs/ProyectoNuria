@@ -1,0 +1,1 @@
+{"version":3,"sourceRoot":"","sources":["../../scss/layout/footer.scss","../../scss/abstracts/variables.scss","../../scss/abstracts/mixins.scss"],"names":[],"mappings":"AAGA;EACI,kBCOc;EDNd,OCKS;EDJT;EACA;EACA,aCMO;EDLP;EACA;;AAEA;EETA;EACA;EACA;EFSI;EACA;;AAEA;EACI,OCRC;EDSD;EACA;;AAEA;EACI,OCdF;;ADmBV;EACI;EACA;EACA,OCtBM","file":"footer.css"}

@@ -1,0 +1,77 @@
+.logo-login {
+  height: 6.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.login-container,
+.signup-container {
+  background-color: hsl(233, 57%, 18%);
+  padding: 2.5rem;
+  border-radius: 0.625rem;
+  box-shadow: 0 0.25rem 0.75rem hsla(0, 0%, 0%, 0.2);
+  text-align: center;
+  color: hsl(0, 0%, 100%);
+  width: 18.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-form,
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9375rem;
+  width: 100%;
+}
+.login-form h2,
+.signup-form h2 {
+  font-family: "Lilita One", sans-serif;
+  font-size: 1.75rem;
+  text-align: center;
+}
+.login-form label,
+.signup-form label {
+  text-align: left;
+  font-family: "Montserrat", sans-serif;
+  width: 100%;
+}
+.login-form input,
+.signup-form input {
+  padding: 0.625rem;
+  border-radius: 0.3125rem;
+  border: none;
+}
+
+.btn-login,
+.btn-signup {
+  background-color: hsl(0, 0%, 100%);
+  color: hsl(0, 0%, 0%);
+  font-family: "Lilita One", sans-serif;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.3125rem;
+  padding: 0.625rem;
+  margin: 1.875rem 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: 100%;
+}
+.btn-login:hover,
+.btn-signup:hover {
+  background-color: hsl(0, 0%, 74%);
+}
+
+.login-footer,
+.signup-footer {
+  margin-top: 0.9375rem;
+  font-size: 0.875rem;
+  text-align: center;
+}
+.login-footer a,
+.signup-footer a {
+  color: hsl(0, 0%, 100%);
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=auth.css.map */

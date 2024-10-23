@@ -1,0 +1,1 @@
+{"version":3,"sourceRoot":"","sources":["../../scss/layout/section.scss","../../scss/abstracts/variables.scss","../../scss/abstracts/mixins.scss"],"names":[],"mappings":"AAGA;EACI;EACA;EACA,SCYa;EDXb;EACA;EACA,KCUM;EDTN;EACA;;AAEA;EACI,kBCJK;EDKL,OCRI;EDSJ;EACA;EACA;EETJ;EFWI;EACA;;AAGJ;EACI;EACA;EACA,kBClBM;EDmBN;EACA","file":"section.css"}

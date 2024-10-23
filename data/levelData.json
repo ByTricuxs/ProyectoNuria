@@ -16,39 +16,40 @@
      { "x": 2700, "y": 630, "type": "plataformMidle" },
      { "x": 2750, "y": 630, "type": "plataformRight" },
       
-     { "x": 3200, "y": 390, "type": "plataformLeft" },
-     { "x": 3400, "y": 390, "type": "plataformMidle" },
-     { "x": 3450, "y": 390, "type": "plataformRight" },
+     { "x": 3200, "y": 380, "type": "plataformLeft" },
+     { "x": 3400, "y": 380, "type": "plataformMidle" },
+     { "x": 3450, "y": 380, "type": "plataformRight" },
       
-     { "x": 3800, "y": 660, "type": "plataformLeft" },
-     { "x": 3900, "y": 660, "type": "plataformMidle" },
-     { "x": 4000, "y": 660, "type": "plataformRight" },
+     { "x": 3800, "y": 610, "type": "plataformLeft" },
+     { "x": 3900, "y": 610, "type": "plataformMidle" },
+     { "x": 4000, "y": 610, "type": "plataformRight" },
       
-     { "x": 4500, "y": 660, "type": "plataformLeft" },
-     { "x": 4600, "y": 660, "type": "plataformMidle" },
-     { "x": 4650, "y": 660, "type": "plataformRight" },
+     { "x": 4450, "y": 665, "type": "plataformLeft" },
+     { "x": 4500, "y": 665, "type": "plataformMidle" },
+     { "x": 4550, "y": 665, "type": "plataformRight" },
       
-     { "x": 5000, "y": 660, "type": "plataformLeft" },
-     { "x": 5050, "y": 660, "type": "plataformMidle" },
-     { "x": 5100, "y": 660, "type": "plataformRight" },
+     { "x": 5000, "y": 540, "type": "plataformLeft" },
+     { "x": 5100, "y": 540, "type": "plataformMidle" },
+     { "x": 5150, "y": 540, "type": "plataformRight" },
       
-     { "x": 5500, "y": 660, "type": "plataformLeft" },
-     { "x": 5520, "y": 660, "type": "plataformMidle" },
-     { "x": 5540, "y": 660, "type": "plataformRight" }
+     { "x": 5500, "y": 650, "type": "plataformLeft" },
+     { "x": 5520, "y": 650, "type": "plataformMidle" },
+     { "x": 5540, "y": 650, "type": "plataformRight" }
    ],
    "gifts": [
      { "x": 700, "y": 100, "key": "coin" },
-     { "x": 1200, "y": 430, "key": "coin" },
-     { "x": 1800, "y": 530, "key": "coin" },
-     { "x": 1500, "y": 230, "key": "bottle" },
-     { "x": 900, "y": 860, "key": "bottle" },
-     { "x": 2000, "y": 700, "key": "bottle" },
-     { "x": 1200, "y": 800, "key": "magicStone" }
+     { "x": 2300, "y": 860, "key": "coin" },
+     { "x": 5000, "y": 760, "key": "coin" },
+     { "x": 100, "y": 230, "key": "bottle" },
+     { "x": 1200, "y": 860, "key": "bottle" },
+     { "x": 3300, "y": 300, "key": "bottle" },
+     { "x": 1500, "y": 800, "key": "magicStone" }
    ],
    "enemies": [
      { "x": 1350, "y": 765, "key": "enemy1" },
-     { "x": 2000, "y": 460, "key": "enemy2" },
-     { "x": 550, "y": 825, "key": "enemy3" }
+     { "x": 1900, "y": 460, "key": "enemy2" },
+     { "x": 550, "y": 825, "key": "enemy3" },
+     { "x": 3000, "y": 560, "key": "enemy2" }
    ],
    "player": {
      "x": 100,

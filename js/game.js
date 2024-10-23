@@ -2,7 +2,7 @@ const PLAYER_SCALE = 0.6;
 const PLATFORM_SCALE = 0.7;
 const ENEMY_SCALE = 0.3;
 const GIFT_SCALE = 0.1;
-const ZOOM_FACTOR = 1.3;
+const ZOOM_FACTOR = 1;
 const WORLD_BOUNDS = { width: 5714, height: 1000 };
 const PLAYER_DIMENSIONS = {
   walk: [240, 435],
@@ -10,10 +10,10 @@ const PLAYER_DIMENSIONS = {
   jump: [140, 435],
 };
 
-// Crear una nueva escena de Phaser llamada "Game"
+// Create a new Phaser scene called "Game"
 let gameScene = new Phaser.Scene("Game");
 
-// Inicialización de parámetros para la escena
+// Initialize scene parameters
 gameScene.init = function () {
   this.playerSpeed = 300;
   this.playerJump = -880;
@@ -25,9 +25,8 @@ gameScene.init = function () {
   updateCoinsText(this);
 };
 
-// Carga de los recursos necesarios para el juego
+// Preload game assets
 gameScene.preload = function () {
-  // Cargar imágenes y sprites
   const images = [
     ["layer4", "./img/sources/Background/Layer 4.png"],
     ["layer3", "./img/sources/Background/Layer 3.png"],
@@ -65,7 +64,7 @@ gameScene.preload = function () {
   this.load.json("levelData", "/data/levelData.json");
 };
 
-// Función para crear animaciones reutilizable
+// Utility function to create animations
 gameScene.createAnimation = function (
   key,
   spriteKey,
@@ -81,51 +80,57 @@ gameScene.createAnimation = function (
   });
 };
 
-// Creación de la escena y configuración de los elementos del juego
+// Create scene and configure game elements
 gameScene.create = function () {
   const createLayer = (key, scrollFactor = 0) =>
     this.add.image(0, 0, key).setOrigin(0, 0).setScrollFactor(scrollFactor);
 
-  // Capas de fondo
   this.layer4 = createLayer("layer4");
   this.layer3 = createLayer("layer3");
 
-  // Crear plataformas
   this.platforms = this.physics.add.staticGroup();
 
-  // Cargar datos desde el JSON
   const levelData = this.cache.json.get("levelData");
 
-  // Crear plataformas a partir de los datos del JSON
   levelData.platforms.forEach((platform) => {
-    const platformKey = platform.type; // Usar el tipo desde el JSON
+    const platformKey = platform.type;
     this.platforms
       .create(platform.x, platform.y, platformKey)
       .setScale(PLATFORM_SCALE)
       .refreshBody();
   });
 
-  // Agregar suelos y otras plataformas (puedes incluir estas directamente o también desde JSON)
   this.layer2 = this.physics.add
     .staticImage(0, 900, "layer2")
     .setOrigin(0, 0)
     .setScale(1)
     .refreshBody();
 
-  // Crear animaciones
   this.createAnimations();
 
-  // Enemigos
-  this.enemies = this.physics.add.staticGroup();
+  this.enemies = this.physics.add.group({
+    allowGravity: true,
+    immovable: false,
+  });
   levelData.enemies.forEach((enemy) => {
     const newEnemy = this.enemies
       .create(enemy.x, enemy.y, enemy.key)
       .setScale(ENEMY_SCALE)
-      .refreshBody();
+      .refreshBody()
+      .setCollideWorldBounds(true);
+      if (enemy.key === "enemy3") {
+        newEnemy.setSize(400, 450);
+      } else if (enemy.key === "enemy2") {
+        newEnemy.setSize(450, 650);
+      } else if (enemy.key === "enemy1") {
+        newEnemy.setSize(500, 800);
+      }
+    const randomDirection = Math.floor(Math.random() * 2);
+    newEnemy.setVelocityX(randomDirection === 1 ? 100 : -100);
     newEnemy.anims.play(enemy.key);
+    newEnemy.direction = randomDirection === 1 ? "right" : "left";
   });
 
-  // Regalos (gifts)
   this.gifts = this.physics.add.staticGroup();
   levelData.gifts.forEach((gift) => {
     const newGift = this.gifts
@@ -135,26 +140,24 @@ gameScene.create = function () {
     newGift.anims.play(gift.key);
   });
 
-  // Configuración del jugador
   const playerData = levelData.player;
   this.player = this.physics.add
     .sprite(playerData.x, playerData.y, playerData.key)
     .setScale(PLAYER_SCALE)
     .setCollideWorldBounds(true);
 
-  // Configurar mundo y cámara
   this.physics.world.setBounds(0, 0, WORLD_BOUNDS.width, WORLD_BOUNDS.height);
   this.cameras.main
     .setBounds(0, 0, WORLD_BOUNDS.width, WORLD_BOUNDS.height)
     .startFollow(this.player)
     .setZoom(ZOOM_FACTOR);
 
-  // Controles del jugador
   this.cursors = this.input.keyboard.createCursorKeys();
 
-  // Configurar colisiones
   this.physics.add.collider(this.player, this.platforms);
   this.physics.add.collider(this.player, this.layer2);
+  this.physics.add.collider(this.enemies, this.platforms);
+  this.physics.add.collider(this.enemies, this.layer2);
   this.physics.add.overlap(
     this.player,
     this.gifts,
@@ -170,11 +173,11 @@ gameScene.create = function () {
     this
   );
 
-  // Añadir capas de adornos
   createLayer("layer1", 1);
   createLayer("layer0", 1);
 };
 
+// Create animations for characters and props
 gameScene.createAnimations = function () {
   this.createAnimation("walk", "playerWalk", [0, 1, 2, 3, 4, 5, 6, 7], 8);
   this.createAnimation("idle", "playerIdle", [0, 1, 2, 3], 4);
@@ -187,20 +190,17 @@ gameScene.createAnimations = function () {
     0
   );
 
-  // Animaciones de props
   this.createAnimation("coin", "coin", [0, 1, 2, 3, 4, 5, 6, 7], 8);
   this.createAnimation("bottle", "bottle", [0, 1, 2, 3, 4, 5, 6, 7], 8);
   this.createAnimation("magicStone", "magicStone", [0, 1, 2, 3, 4, 5, 6, 7], 8);
 
-  // Animaciones de enemigos
   this.createAnimation("enemy1", "enemy1", [0, 1, 2, 3, 4, 5, 6, 7], 8);
   this.createAnimation("enemy2", "enemy2", [0, 1, 2, 3, 4, 5, 6, 7], 8);
   this.createAnimation("enemy3", "enemy3", [0, 1, 2, 3, 4, 5, 6, 7], 8);
 };
 
-// Función para recoger regalos (gifts)
+// Handle collecting gifts
 gameScene.collectGifts = function (player, gift) {
-  // Aquí verificamos el tipo de objeto recogido para activar la acción correspondiente
   switch (gift.texture.key) {
     case "coin":
       this.collectCoin(player, gift);
@@ -209,33 +209,32 @@ gameScene.collectGifts = function (player, gift) {
       this.collectBottle(player, gift);
       break;
     case "magicStone":
-      this.collectMagicStone(player, gift); // Transformación independiente
+      this.collectMagicStone(player, gift);
       break;
   }
-
   gift.destroy();
 };
 
-// Función para manejar la recolección de la moneda (sumar una moneda)
+// Collect a coin
 gameScene.collectCoin = function (player, coin) {
-  console.log("¡Obtuviste una moneda!");
+  console.log("Collected a coin!");
   this.coinsCount += 1;
   updateCoinsText(this);
-  // Verifica si se han recogido 3 monedas
+
   if (this.coinsCount === 3) {
     showVictoryMessage();
     player.setVelocity(0, 0);
   }
 };
 
-// Función para manejar la recolección de la botella (sumar una vida)
+// Collect a health bottle
 gameScene.collectBottle = function (player, bottle) {
-  console.log("¡Has recuperado una vida!");
+  console.log("Gained a life!");
   this.lives += 1;
   updateLivesText(this);
 };
 
-// Función para manejar la recolección de la piedra mágica (animación de transformación)
+// Collect a magic stone (transformation)
 gameScene.collectMagicStone = function (player, magicStone) {
   if (this.isTransforming) return;
   this.isTransforming = true;
@@ -259,30 +258,28 @@ gameScene.collectMagicStone = function (player, magicStone) {
       player.anims.play("jump");
     }
   });
-  magicStone.destroy();
 };
 
-// Función para manejar colisión con enemigos
+// Handle hitting an enemy
 gameScene.hitEnemies = function (player, enemy) {
   console.log("Colisión con enemigo detectada");
 
   if (this.lives === 1) {
     console.log("¡Has perdido tu última vida! Reiniciando el nivel...");
-    this.scene.stop(); // Detener la escena actual
+    this.scene.stop();
     player.setVelocity(0, 0);
     player.body.moves = false;
     player.body.allowGravity = false;
     this.input.keyboard.enabled = false;
-    this.scene.start("Game"); // Iniciar la escena nuevamente
+    this.scene.start("Game");
     updateCoinsText(this);
     updateLivesText(this);
     showMessage();
   } else {
-    // Restar vida
     this.lives -= 1;
     updateLivesText(this);
     console.log(`¡Te queda(n) ${this.lives} vida(s)!`);
-    player.setPosition(100, 817); // Opcional: reiniciar posición del jugador
+    player.setPosition(100, 816);
   }
 };
 
@@ -309,7 +306,6 @@ function showVictoryMessage(player) {
 }
 
 function updateLivesText(scene) {
-  // Acceder al elemento HTML y actualizar el texto
   const livesTextElement = document.getElementById("livesText");
   if (livesTextElement) {
     livesTextElement.textContent = `Vidas: ${scene.lives}`;
@@ -317,7 +313,6 @@ function updateLivesText(scene) {
 }
 
 function updateCoinsText(scene) {
-  // Acceder al elemento HTML y actualizar el texto
   const coinsTextElement = document.getElementById("coinsText");
   if (coinsTextElement) {
     coinsTextElement.textContent = `Monedas: ${scene.coinsCount}`;
@@ -325,7 +320,6 @@ function updateCoinsText(scene) {
 }
 
 gameScene.updatePlayerHitbox = function () {
-  // Dependiendo de la animación actual, ajustar el tamaño del hitbox del jugador
   const currentAnimKey = this.player.anims.currentAnim
     ? this.player.anims.currentAnim.key
     : "idle";
@@ -350,9 +344,7 @@ gameScene.updatePlayerHitbox = function () {
       height = PLAYER_DIMENSIONS.idle[1];
   }
 
-  // Redimensionar el hitbox del jugador
   this.player.body.setSize(width * PLAYER_SCALE, height * PLAYER_SCALE);
-  // Centrar el hitbox en el sprite del jugador
   this.player.body.setOffset(
     (this.player.width - width * PLAYER_SCALE) / 2,
     (this.player.height - height * PLAYER_SCALE) / 2
@@ -361,12 +353,10 @@ gameScene.updatePlayerHitbox = function () {
 
 // Actualización del juego
 gameScene.update = function () {
-  // Evitar actualizar si está en transformación
   if (this.isTransforming) return;
-  // Movimiento hacia la izquierda
   if (this.cursors.left.isDown) {
     this.player.setVelocityX(-this.playerSpeed);
-    this.player.flipX = true; // Voltear el sprite para que mire hacia la izquierda
+    this.player.flipX = true;
     if (
       !this.isJumping &&
       (!this.player.anims.isPlaying ||
@@ -376,10 +366,9 @@ gameScene.update = function () {
       this.updatePlayerHitbox();
     }
   }
-  // Movimiento hacia la derecha
   else if (this.cursors.right.isDown) {
     this.player.setVelocityX(this.playerSpeed);
-    this.player.flipX = false; // Orientación normal
+    this.player.flipX = false;
     if (
       !this.isJumping &&
       (!this.player.anims.isPlaying ||
@@ -389,9 +378,8 @@ gameScene.update = function () {
       this.updatePlayerHitbox();
     }
   }
-  // Sin movimiento
   else {
-    this.player.setVelocityX(0); // Detener movimiento horizontal
+    this.player.setVelocityX(0);
     if (
       !this.isJumping &&
       (!this.player.anims.isPlaying ||
@@ -402,32 +390,40 @@ gameScene.update = function () {
     }
   }
 
-  // Salto del jugador
   if (this.cursors.up.isDown && !this.isJumping) {
-    this.player.setVelocityY(this.playerJump); // Aplicar fuerza hacia arriba
+    this.player.setVelocityY(this.playerJump);
     this.player.anims.play("jump");
     this.updatePlayerHitbox();
-    this.isJumping = true; // Cambiar estado a "en el aire"
+    this.isJumping = true;
   }
-
-  // Verificar si el jugador ha aterrizado
   if (this.player.body.touching.down || this.player.body.blocked.down) {
     if (this.isJumping) {
-      this.isJumping = false; // Restablecer estado a "en tierra"
+      this.isJumping = false;
       if (this.player.body.velocity.x === 0) {
-        this.player.anims.play("idle"); // Reproducir animación de idle si no se está moviendo
+        this.player.anims.play("idle");
         this.updatePlayerHitbox();
       } else {
-        this.player.anims.play("walk"); // Reproducir animación de caminar si se está moviendo
+        this.player.anims.play("walk");
         this.updatePlayerHitbox();
       }
     }
   }
-  this.layer4.x = -this.cameras.main.scrollX * 0.1; // Capa más lejana, se mueve más lento
-  this.layer4.y = -this.cameras.main.scrollY * 0.1; // Capa más lejana, se mueve más lento
 
-  this.layer3.x = -this.cameras.main.scrollX * 0.3; // Capa intermedia
-  this.layer3.y = -this.cameras.main.scrollY * 0.3; // Capa intermedia
+  this.enemies.getChildren().forEach((enemy) => {
+    if (enemy.body.blocked.left) {
+      enemy.setVelocityX(100);
+      enemy.direction = "right";
+    } else if (enemy.body.blocked.right) {
+      enemy.setVelocityX(-100);
+      enemy.direction = "left";
+    }
+  });
+
+  this.layer4.x = -this.cameras.main.scrollX * 0.1;
+  this.layer4.y = -this.cameras.main.scrollY * 0.1;
+
+  this.layer3.x = -this.cameras.main.scrollX * 0.3; 
+  this.layer3.y = -this.cameras.main.scrollY * 0.3; 
 };
 
 let config = {

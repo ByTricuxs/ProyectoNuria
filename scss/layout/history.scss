@@ -1,5 +1,5 @@
-@use 'variables';
-@use 'mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .history {
     padding: 13.75rem 8.75rem 11.25rem; // 220px to rem
@@ -28,9 +28,16 @@
     }
 
     img {
-        max-width: 37.5rem; // 600px
+        max-width: 22rem; // 600px
         margin: 0 auto;
         grid-column: 1 / 2;
+    @include mixins.telefono {
+        max-width: 30rem;
+    }
+
+    @include mixins.tablet {
+        max-width: 37rem; 
+    }
     }
 
     @include mixins.telefono {

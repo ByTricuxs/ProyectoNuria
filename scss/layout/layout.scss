@@ -1,5 +1,5 @@
-@use 'mixins';
-@use 'section';
+@use '../abstracts/mixins';
+@use '../layout/section';
 
 .home,
 .login-page,

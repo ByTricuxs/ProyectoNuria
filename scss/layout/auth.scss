@@ -1,5 +1,5 @@
-@use 'variables';
-@use 'mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .logo-login {
     height: 6.25rem; // 100px

@@ -1,4 +1,4 @@
-@use 'variables' as v;
+@use '../abstracts/variables' as v;
 
 @mixin flex-center {
     display: flex;

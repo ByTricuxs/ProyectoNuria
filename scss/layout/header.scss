@@ -1,4 +1,4 @@
-@use 'mixins';
+@use '../abstracts/mixins';
 
 @include mixins.telefono {
     nav {

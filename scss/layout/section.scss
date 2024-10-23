@@ -1,8 +1,8 @@
-@use 'variables';
-@use 'mixins';
+@use '../abstracts/variables';
+@use '../abstracts/mixins';
 
 .section {
-    height: variables.$sectionHeight;
+    height: auto;
     background-size: cover;
     padding: variables.$sectionPadding;
     display: grid;
@@ -15,15 +15,16 @@
         background-color: variables.$lightColor;
         color: variables.$darkColor;
         text-align: center;
-        padding: 1.25rem; // 20px
+        padding: 1rem;
         border-radius: 0.625rem; // 10px
         @include mixins.box-shadow(hsla(0, 0%, 0%, 0.1));
-        width: 10rem; // 160px to rem
+        width: 12rem;
+        height: auto;
     }
 
     img {
-        width: 8.75rem; // 140px to rem
-        height: 8.75rem; // 140px to rem
+        width: 10.75rem; // 140px to rem
+        height: 10.75rem; // 140px to rem
         background-color: variables.$meduimColor;
         border-radius: 0.625rem; // 10px
         margin-bottom: 0.625rem; // 10px
