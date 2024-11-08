@@ -90,7 +90,7 @@ h1 {
 .home,
 .login-page,
 .signup-page {
-  background-image: url(/img/landing/background1.png);
+  background-image: url(../img/landing/background1.png);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -100,15 +100,15 @@ h1 {
 }
 
 .items {
-  background-image: url(/img/landing/background2.png);
+  background-image: url(../img/landing/background2.png);
 }
 
 .enemies {
-  background-image: url(/img/landing/background3.png);
+  background-image: url(../img/landing/background3.png);
 }
 
 .transformations {
-  background-image: url(/img/landing/background4.png);
+  background-image: url(../img/landing/background4.png);
 }
 
 .logo {
